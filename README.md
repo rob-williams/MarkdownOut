@@ -2,7 +2,7 @@
 
 I created this because I needed to create a bunch of Markdown-formatted files through code and was tired of manually typing out the syntax. MarkdownOut provides a simple wrapper class around System.IO.StreamWriter that can add Markdown syntax to its output.
 
-***Disclaimer:** Markdown syntax is defined is a variety of different ways. Feel free to adjust MarkdownOut to comply with your syntax definition of interest.*
+*Disclaimer: Markdown syntax is defined is a variety of different ways. Feel free to adjust MarkdownOut to comply with your syntax definition of interest.*
 
 ## Styles and Formats
 

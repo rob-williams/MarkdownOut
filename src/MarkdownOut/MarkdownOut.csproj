@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MdExtensions.cs" />
     <Compile Include="MdFormat.cs" />
     <Compile Include="MdStyle.cs" />
     <Compile Include="MdText.cs" />

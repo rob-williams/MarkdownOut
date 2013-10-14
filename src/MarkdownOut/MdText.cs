@@ -156,6 +156,24 @@ namespace MarkdownOut {
         }
 
         /// <summary>
+        /// Applies an indent to the provided text.
+        /// </summary>
+        /// <param name="text">The text to indent.</param>
+        /// <param name="indent">
+        /// The indent length to apply (0 adds no indent, 1 adds a single indentation to create a
+        /// sublist, etc.). Negative values are ignored.
+        /// </param>
+        /// <returns>The indented string.</returns>
+        public static string Indent(object text, int indent) {
+            string indentPrefix = String.Empty;
+            while (indent > 0) {
+                indentPrefix += ListItemIndent;
+                indent--;
+            }
+            return indentPrefix + text;
+        }
+
+        /// <summary>
         /// Cleanses the provided text by replacing all tab characters with the <see cref="Tab"/>
         /// string and ensuring that all newlines are the Windows "\r\n".
         /// </summary>
@@ -170,9 +188,9 @@ namespace MarkdownOut {
              * Next, replace all Windows newlines with the Unix newline; this is done to make sure
              * the following line of code doesn't replace instances of "\r\n" with "\r\n\n". All of
              * this is done to make sure the text displays correctly on Windows machines (programs
-             * such as Visual Studio do not recognize "\n" as a newline, just "\r\n").
+             * such as Visual Studio or Notepad do not recognize "\n" as a newline, just "\r\n").
              */
-            text = text.Replace("\r\n", "\n");
+            text = text.Replace("\r\n", "\n").Replace("\r", "\n");
             //finally, replace all Unix newlines with the Windows newline and return
             return text.Replace("\n", "\r\n");
         }

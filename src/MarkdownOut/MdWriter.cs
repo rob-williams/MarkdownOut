@@ -104,10 +104,7 @@ namespace MarkdownOut {
         public void WriteUnorderedListItem(object output, int listIndent = 0,
                                            MdStyle style = MdStyle.None) {
             string text = MdText.StyleAndFormat(output, style, MdFormat.UnorderedListItem);
-            while (listIndent > 0) {
-                text = MdText.ListItemIndent + text;
-                listIndent--;
-            }
+            text = MdText.Indent(text, listIndent);
             stream.Write(MdText.Cleanse(text) + MdText.ParagraphBreak);
         }
 
@@ -133,10 +130,7 @@ namespace MarkdownOut {
             if (itemNumber != MdText.DefaultListItemNumber) {
                 text = itemNumber + text.Substring(1);
             }
-            while (listIndent > 0) {
-                text = MdText.ListItemIndent + text;
-                listIndent--;
-            }
+            text = MdText.Indent(text, listIndent);
             stream.Write(MdText.Cleanse(text) + MdText.ParagraphBreak);
         }
     }

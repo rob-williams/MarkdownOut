@@ -13,9 +13,9 @@ namespace MarkdownOut {
         public static readonly string Tab = new string(' ', 4);
 
         /// <summary>
-        /// The Markdown line break string (a newline followed by two spaces).
+        /// The Markdown line break string (two spaces followed by a newline).
         /// </summary>
-        public static readonly string LineBreak = "\r\n" + new string(' ', 2);
+        public static readonly string LineBreak = new string(' ', 2) + "\r\n";
 
         /// <summary>
         /// The Markdown paragraph break string (two newlines).
@@ -33,7 +33,7 @@ namespace MarkdownOut {
         public static readonly string BoldWrap = "**";
 
         /// <summary>
-        /// The Markdown code string to be wrapped around a string text.
+        /// The Markdown code string to be wrapped around a string of text.
         /// </summary>
         public static readonly string CodeWrap = "`";
 
@@ -103,6 +103,7 @@ namespace MarkdownOut {
         /// <param name="text">The text to style.</param>
         /// <param name="style">The Markdown style to apply.</param>
         /// <returns>The styled string.</returns>
+        /// <exception cref="System.ArgumentException">The style is not recognized.</exception>
         public static string Style(object text, MdStyle style) {
             string wrap;
             switch (style) {
@@ -112,7 +113,7 @@ namespace MarkdownOut {
                 case MdStyle.BoldItalic: wrap = ItalicWrap + BoldWrap; break;
                 case MdStyle.Code: wrap = CodeWrap; break;
                 case MdStyle.StrikeThrough: wrap = StrikeThroughWrap; break;
-                default: throw new ArgumentException("style");
+                default: throw new ArgumentException("The style is not recognized.");
             }
             return wrap + text + wrap;
         }
@@ -125,6 +126,7 @@ namespace MarkdownOut {
         /// <param name="text">The text to format.</param>
         /// <param name="format">The Markdown format to apply.</param>
         /// <returns>The formatted string.</returns>
+        /// <exception cref="System.ArgumentException">The format is not recognized.</exception>
         public static string Format(object text, MdFormat format) {
             string prefix;
             switch (format) {
@@ -138,7 +140,7 @@ namespace MarkdownOut {
                 case MdFormat.Quote: prefix = QuotePrefix; break;
                 case MdFormat.UnorderedListItem: prefix = UnorderedListItemPrefix; break;
                 case MdFormat.OrderedListItem: prefix = OrderedListItemPrefix; break;
-                default: throw new ArgumentException("format");
+                default: throw new ArgumentException("The format is not recognized.");
             }
             return prefix + text;
         }
@@ -161,7 +163,7 @@ namespace MarkdownOut {
         /// <param name="text">The text to indent.</param>
         /// <param name="indent">
         /// The indent length to apply (0 adds no indent, 1 adds a single indentation to create a
-        /// sublist, etc.). Negative values are ignored.
+        /// sublist, etc). Negative values are ignored.
         /// </param>
         /// <returns>The indented string.</returns>
         public static string Indent(object text, int indent) {
@@ -175,24 +177,32 @@ namespace MarkdownOut {
 
         /// <summary>
         /// Cleanses the provided text by replacing all tab characters with the <see cref="Tab"/>
-        /// string and ensuring that all newlines are the Windows "\r\n".
+        /// string and ensuring that all newlines are the Windows <c>\r\n</c>.
         /// </summary>
         /// <param name="text">The text to cleanse.</param>
-        /// <returns>
-        /// The cleansed text without tab characters and only including Windows newlines.
-        /// </returns>
-        public static string Cleanse(string text) {
+        /// <param name="useMdLineBreaks">
+        /// If true, all newlines will be replaced by Markdown line breaks instead of just Windows
+        /// newlines. This is useful when cleansing text formatted as a list item as it maintains
+        /// the desired line breaks in the list item's text.
+        /// </param>
+        /// <returns>The cleansed text with consistent newlines and no tab characters.</returns>
+        public static string Cleanse(string text, bool useMdLineBreaks = false) {
             //first, replace all tab characters with the Tab string
             text = text.Replace("\t", Tab);
             /*
              * Next, replace all Windows newlines with the Unix newline; this is done to make sure
-             * the following line of code doesn't replace instances of "\r\n" with "\r\n\n". All of
-             * this is done to make sure the text displays correctly on Windows machines (programs
-             * such as Visual Studio or Notepad do not recognize "\n" as a newline, just "\r\n").
+             * the following code doesn't replace instances of "\r\n" with "\r\n\n". All of this is
+             * done to make sure the raw text displays correctly on Windows machines (programs such
+             * as Visual Studio or Notepad do not recognize "\n" as a newline, just "\r\n").
              */
             text = text.Replace("\r\n", "\n").Replace("\r", "\n");
-            //finally, replace all Unix newlines with the Windows newline and return
-            return text.Replace("\n", "\r\n");
+            //finally, replace all Unix newlines with Windows newlines or Markdown line breaks
+            if (useMdLineBreaks) {
+                return text.Replace("\n", LineBreak);
+            }
+            else {
+                return text.Replace("\n", "\r\n");
+            }
         }
     }
 }

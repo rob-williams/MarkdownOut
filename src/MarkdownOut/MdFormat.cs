@@ -1,7 +1,9 @@
 ﻿namespace MarkdownOut {
 
     /// <summary>
-    /// Specifies a Markdown format to apply to a line or block of text.
+    /// Specifies a Markdown format to apply to a line or block of text. Formats are applied with a
+    /// prefix string and, unlike Markdown styles (see <see cref="MdStyle"/>), cannot be selectively
+    /// applied to substrings.
     /// </summary>
     public enum MdFormat {
 

@@ -1,7 +1,8 @@
 ﻿namespace MarkdownOut {
 
     /// <summary>
-    /// Specifies a Markdown style to apply to a string of text.
+    /// Specifies a Markdown style to apply to a string of text. Styles are applied by wrapping text
+    /// with a special string on each side and can be selectively applied to substrings.
     /// </summary>
     public enum MdStyle {
 
